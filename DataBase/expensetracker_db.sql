@@ -36,6 +36,6 @@ foreign key (category_id) references et_categories(category_id);
 alter table et_transactions add constraint trans_users_fk
 foreign key (user_id) references et_users(user_id);
 
-create sequences et_users_seq increment 1 start 1;
-create sequences et_categories_seq increment 1 start 1;
-create sequences et_transactions_seq increment 1 start 1000;
+create sequence et_users_seq increment 1 start 1;
+create sequence et_categories_seq increment 1 start 1;
+create sequence et_transactions_seq increment 1 start 1000;
