@@ -18,17 +18,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User validateUser(String email, String password) throws EtAuthException {
-        return null;
+        if (email != null) {
+            email = email.toLowerCase();
+        }
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     @Override
     public User registerUser(String first, String lastName, String email, String password) throws EtAuthException {
         Pattern pattern = Pattern.compile("^(.+)@(.+)$");
         if (email != null) email = email.toLowerCase();
-        if(!pattern.matcher(email).matches())
+        if (!pattern.matcher(email).matches())
             throw new EtAuthException("Invalid Email format");
         Integer count = userRepository.getCountByEmail(email);
-        if(count > 0)
+        if (count > 0)
             throw new EtAuthException("Email already in use");
         Integer userId = userRepository.create(first, lastName, email, password);
         return userRepository.findByUserId(userId);

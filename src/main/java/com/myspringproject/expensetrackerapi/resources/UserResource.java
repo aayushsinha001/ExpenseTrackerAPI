@@ -21,14 +21,24 @@ public class UserResource {
     UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String,String>> registerUser(@RequestBody Map<String, Object> userMap){
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody Map<String, Object> userMap) {
         String firstName = (String) userMap.get("firstName");
         String lastName = (String) userMap.get("lastName");
         String email = (String) userMap.get("email");
         String password = (String) userMap.get("password");
-        User user = userService.registerUser(firstName,lastName,email,password);
+        User user = userService.registerUser(firstName, lastName, email, password);
         Map<String, String> map = new HashMap<>();
         map.put("Message : ", "User successfully registered");
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody Map<String, Object> userMap) {
+        String email = (String) userMap.get("Email");
+        String password = (String) userMap.get("Password");
+        User user = userService.validateUser(email, password);
+        Map<String, String> map = new HashMap<>();
+        map.put("User : ", "Logged in successfully");
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }
