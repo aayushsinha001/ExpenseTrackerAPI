@@ -28,6 +28,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 rs.getDouble("TOTAL_EXPENSE"));
     });
 
+    private static final String SQL_UPDATE_CATEGORY = "UPDATE ET_CATEGORIES SET TITLE = ? ," +
+            "DESCRIPTION = ? WHERE USER_ID = ? AND CATEGORY_ID = ?";
+
+    private static final String SQL_FIND_ALL = "SELECT C.CATEGORY_ID, C.USER_ID, C.TITLE, C.DESCRIPTION, " +
+            "COALESCE(SUM(T.AMOUNT), 0) TOTAL_EXPENSE " +
+            "FROM ET_TRANSACTIONS T RIGHT OUTER JOIN ET_CATEGORIES C on C.CATEGORY_ID = T.CATEGORY_ID " +
+            "WHERE C.USER_ID = ? GROUP BY C.CATEGORY_ID";
+
     private static final String SQL_FIND_BY_ID = "SELECT C.CATEGORY_ID, C.USER_ID, C.TITLE, C.DESCRIPTION, " +
             "COALESCE(SUM(T.AMOUNT), 0) TOTAL_EXPENSE " +
             "FROM ET_TRANSACTIONS T RIGHT OUTER JOIN ET_CATEGORIES C on C.CATEGORY_ID = T.CATEGORY_ID " +
@@ -40,7 +48,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public List<Category> fetchAll(Integer userId) throws EtResourceNotFoundException {
-        return null;
+       try {
+           return jdbcTemplate.query(SQL_FIND_ALL, new Object[]{userId}, categoryRowMapper);
+       } catch (Exception e) {
+           throw new EtResourceNotFoundException("Invalid UserId");
+       }
     }
 
     @Override
@@ -73,6 +85,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public void update(Integer userId, Integer categoryId, Category category) {
 
+        try {
+            jdbcTemplate.update(SQL_UPDATE_CATEGORY, new Object[]{category.getTitle(), category.getDescription(), userId, categoryId});
+        } catch (Exception e) {
+            throw new EtBadRequestException("Invalid Request");
+        }
     }
 
     @Override
