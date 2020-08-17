@@ -6,10 +6,10 @@ public class Transaction {
     private Integer userId;
     private Integer categoryId;
     private String note;
-    private double amount;
-    private long transactionDate;
+    private Double amount;
+    private Long transactionDate;
 
-    public Transaction(Integer transactionId, Integer userId, Integer categoryId, String note, double amount, long transactionDate) {
+    public Transaction(Integer transactionId, Integer userId, Integer categoryId, String note, Double amount, Long transactionDate) {
         this.transactionId = transactionId;
         this.userId = userId;
         this.categoryId = categoryId;
@@ -50,19 +50,19 @@ public class Transaction {
         this.note = note;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
-    public long getTransactionDate() {
+    public Long getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(long transactionDate) {
+    public void setTransactionDate(Long transactionDate) {
         this.transactionDate = transactionDate;
     }
 }
