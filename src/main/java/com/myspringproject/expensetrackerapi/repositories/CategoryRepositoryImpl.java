@@ -44,6 +44,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     private static final String SQL_CREATE_CATEGORY = "INSERT INTO ET_CATEGORIES (CATEGORY_ID, USER_ID, TITLE, DESCRIPTION) " +
             "VALUES(NEXTVAL('ET_CATEGORIES_SEQ'), ?, ?, ?)";
 
+    private static final String SQL_DELETE_CATEGORY = "DELETE FROM ET_CATEGORIES WHERE USER_ID = ? AND CATEGORY_ID = ?";
+
+    private static final String SQL_DELETE_ALL_TRANSACTIONS = "DELETE FROM ET_TRANSACTIONS WHERE CATEGORY_ID = ?";
+
 
 
     @Override
@@ -94,6 +98,20 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public void removeId(Integer userId, Integer categoryId) {
+        try {
+            this.removeCatTransaction(categoryId);
+            jdbcTemplate.update(SQL_DELETE_CATEGORY, new Object[]{userId, categoryId});
+        } catch (Exception e) {
+            throw new EtBadRequestException("Invalid request for delete category");
+        }
+    }
+
+    private void removeCatTransaction(Integer categoryId) {
+        try {
+            jdbcTemplate.update(SQL_DELETE_ALL_TRANSACTIONS, new Object[]{categoryId});
+        } catch (Exception e) {
+            throw new EtBadRequestException("Invalid request for delete transactions of a category");
+        }
 
     }
 }
